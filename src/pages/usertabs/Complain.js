@@ -14,6 +14,22 @@ const DismissKeyboard = ({children}) =>(
   );
   
 export default class Complain extends Component {
+    constructor(props){
+        super();
+        this.state = {
+            imageUri:''
+        }
+        console.log("complain constructor 22");
+        console.log(props);
+    }
+        
+
+    
+    componentWillReceiveProps(props){
+        alert("in complain "+props.imageUri);
+        this.setState({imageUri:props.imageUri});
+    
+    }
       static navigationOptions = {
         tabBarIcon:({tintColor})=> {
             return <Icon name="ios-add" style={{color:tintColor}} />
@@ -24,7 +40,10 @@ export default class Complain extends Component {
             <DismissKeyboard>
                 <View style={styles.container}> 
                     <Text style={{alignSelf:"center", fontSize:20, fontWeight:'bold', paddingVertical:10}} >
-                        Add Complain Details
+                        {this.props.imageUri?this.props.imageUri:'Add Complain Details'}
+                    </Text>
+                    <Text style={{alignSelf:"center", fontSize:12, fontWeight:'bold', paddingVertical:10}} >
+                        {this.props.imageUri?this.props.imageUri:''}
                     </Text>
                     <ComplainForm /> 
                 </View>	
