@@ -41,7 +41,7 @@ class CameraView extends Component {
               Vibration.vibrate();
               this.setState({
                   formCam: photo.uri 
-              })
+              });
             } 
       } 
 

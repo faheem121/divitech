@@ -14,11 +14,11 @@ export default class Routes extends Component<{}> {
 		return(
 			<Router>
 			    <Stack key="root" hideNavBar={true}>
-             <Scene key="home" component={HomePage} title="Home" />
+                  <Scene key="home" component={HomePage} title="Home" />
 			      <Scene key="login" component={Login} title="Login" />
-			      <Scene key="user" component={User} title="User" />
+			      <Scene key="user" component={User} title="User" initial={true} />
 			      <Scene key="signup" component={Signup} title="Register"/>
-			      <Scene key="camera" component={CameraView} title="Camera" initial={true}/>
+			      <Scene key="camera" component={CameraView} title="Camera" />
 			      <Scene key="image" component={ImageView} title="Image"/>
 			      <Scene key="gallery" component={GalleryView} title="Gallery"/>
 			     

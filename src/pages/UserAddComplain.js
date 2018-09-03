@@ -1,11 +1,25 @@
 import React, { Component } from 'react';
-import {Container, Text ,Content,Icon} from 'native-base';
+import { Text } from 'native-base';
 import { TabNavigator } from 'react-navigation';
 import  NewsFeeds  from './usertabs/NewsFeeds';
 import  Complain  from './usertabs/Complain';
 import  Status from './usertabs/Status';
 
 export default class AddComplain extends Component {
+    constructor(props){
+        super();
+        this.state = {
+            imageUri:''
+        }
+        
+        
+    }
+
+    componentWillReceiveProps(props){
+        this.setState({imageUri:props.imageUri});
+    
+      }
+    
         static navigationOptions = {
       title:"Client Panel"
     }
@@ -18,7 +32,7 @@ export default class AddComplain extends Component {
         </MainNavigator>
         );
     }
-} 
+}
 const MainNavigator = TabNavigator({
    NewsFeeds:{
        screen:NewsFeeds

@@ -6,8 +6,11 @@ import { Button, Icon } from 'native-base';
 import {Actions } from 'react-native-router-flux';
  
 export default class ImageView extends React.Component {
+    constructor(props){
+        super(); 
+    } 
     imageSelected(){
-        Actions.user();
+        Actions.user({imageUri:this.props.imageUri});
     }
   render() {
     return ( 
@@ -21,7 +24,7 @@ export default class ImageView extends React.Component {
                 <Icon name="md-reverse-camera" style={{color:"white"}} />
                 <Text style={{color:'white'}}> retake</Text>
             </Button>
-            <Button style={{flex:1}} full info onPress={ this.imageSelected} >
+            <Button style={{flex:1}} full info onPress={ this.imageSelected.bind(this)} >
                 <Text style={{color:'white'}}> Continue</Text>
                 <Icon name="md-checkbox" style={{color:"white"}} />
             </Button>
