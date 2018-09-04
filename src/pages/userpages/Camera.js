@@ -6,8 +6,8 @@ import {
     StyleSheet,
     TouchableOpacity,
     Vibration
-
 } from 'react-native';
+
 import { Ionicons, Entypo } from '@expo/vector-icons';
 import { Thumbnail, Container, Right, Button, Body, Title, Header, Icon, Left  } from 'native-base';
 import {Camera,  Permissions, ImagePicker  } from 'expo';
@@ -18,7 +18,6 @@ class CameraView extends Component {
     constructor(props){
         super(props);
         this.state = {
-            
             hasCameraPermission : null, 
             camera:Camera,
             camType:Camera.Constants.Type.back,
@@ -27,7 +26,6 @@ class CameraView extends Component {
     }
     async componentWillMount(){
        const {status} = await Permissions.askAsync(Permissions.CAMERA);
-       
        this.setState({hasCameraPermission : status == 'granted'})
    }
 
@@ -35,34 +33,36 @@ class CameraView extends Component {
         this.setState({formCam: props.formCam})
     }
  
-     async takePicture() {
-         if(this.camera){ 
-              let photo = await this.camera.takePictureAsync();
-              Vibration.vibrate();
-              this.setState({
-                  formCam: photo.uri 
-              });
-            } 
-      } 
+    async takePicture() {
+        if(this.camera){ 
+            let photo = await this.camera.takePictureAsync();
+            Vibration.vibrate();
+            this.setState({
+                formCam: photo.uri 
+            });
+            Actions.image({
+                imageUri: this.state.formCam
+            });
+        } 
+    } 
 
-      switchCam(){
+    switchCam(){
         this.setState({
             camType: this.state.camType === Camera.Constants.Type.back 
             ? Camera.Constants.Type.front
             : Camera.Constants.Type.back 
         });
-      }
+    }
 
-      viewPhoto(){
+    viewPhoto(){
         Actions.image({
             imageUri: this.state.formCam
-        })
-      }
+        });
+    }
 
-      pickImage =  () => {
-          Actions.gallery();
-
-      }
+    pickImage =  () => {
+        Actions.gallery();
+    }
 
     render(){
         const {hasCameraPermission } = this.state;
@@ -74,7 +74,6 @@ class CameraView extends Component {
             return  (
                 <Container>
                 <Header>
-
                   <Left>
                     <Button transparent onPress = {() => Actions.pop()}>
                       <Icon name='arrow-back' />
@@ -86,14 +85,12 @@ class CameraView extends Component {
                         <Icon name="images" style={{color:'white', top:10, height:50}} />
                       </Button>
                   </Right> 
-                 
                 </Header>
                 <View style={{flex:1}} >
                     <Camera
                      ref={ ref => {this.camera = ref; }}
                      style={{flex:1, justifyContent:'center', alignContent:'center'}}
                      type={this.state.camType} >
-
                         <View style={{position:'absolute', justifyContent:'space-evenly', height:100,width:'100%', bottom:0, flexDirection:'row'}}>
                             <View style={{ justifyContent:'center', alignItems:'center'}}>
                                 <Ionicons onPress={()=>this.switchCam()} name="ios-reverse-camera-outline" size={36} color={'white'} />

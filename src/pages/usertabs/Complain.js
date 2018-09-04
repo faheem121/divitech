@@ -18,19 +18,14 @@ export default class Complain extends Component {
         super();
         this.state = {
             imageUri:''
-        }
-        console.log("complain constructor 22");
-        console.log(props);
-    }
-        
+        } 
+    } 
 
-    
     componentWillReceiveProps(props){
-        alert("in complain "+props.imageUri);
-        this.setState({imageUri:props.imageUri});
-    
+        this.state.imageUri = props.screenProps.imageUri;
+        this.setState({imageUri: props.screenProps.imageUri});
     }
-      static navigationOptions = {
+    static navigationOptions = {
         tabBarIcon:({tintColor})=> {
             return <Icon name="ios-add" style={{color:tintColor}} />
         }
@@ -45,7 +40,7 @@ export default class Complain extends Component {
                     <Text style={{alignSelf:"center", fontSize:12, fontWeight:'bold', paddingVertical:10}} >
                         {this.props.imageUri?this.props.imageUri:''}
                     </Text>
-                    <ComplainForm /> 
+                    <ComplainForm imageUri={this.state.imageUri}/> 
                 </View>	
             </DismissKeyboard>  
         );

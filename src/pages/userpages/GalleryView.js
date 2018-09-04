@@ -10,16 +10,13 @@ export default class GalleryView extends React.Component {
         super(props);
 
         this.state = {
-            
             image:'',
             hasCameraRollPermission:null
         }
     }
   
     async componentWillMount(){
-        
         const {status} = await Permissions.askAsync(Permissions.CAMERA_ROLL);
-        
         this.setState({hasCameraRollPermission : status == 'granted'})
     }
  
@@ -30,17 +27,15 @@ export default class GalleryView extends React.Component {
         });
         
         if(!result.cancelled){
-            
             this.setState({image: result.uri}) ; 
         } 
-        console.log(this.state.image);
     }
+
     imageSelected(){
         Actions.user();
     }
     render() {
-    return (  
-
+        return (  
             <View style={{flex:1, alignItems:'center', alignContent:'center', alignSelf:'center', justifyContent:'center'}}>
             <Text  onPress={this.showGallery} style={{padding:10, color:"white", fontSize:18, backgroundColor:"skyblue"}}>Select and Image</Text>
                 {/* <Button info block title="Pick image"  /> */}
@@ -52,10 +47,9 @@ export default class GalleryView extends React.Component {
                             <Icon name="md-checkbox" style={{color:"white"}} />
                         </Button>
                     </View>
-    
                 ) :null}
             </View> 
-    );
+        );
   }
 }
   

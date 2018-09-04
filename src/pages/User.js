@@ -12,13 +12,10 @@ export default class User extends Component<{}> {
     this.state = {
       imageUri:''
     } 
-
   }
   
-  
   componentWillReceiveProps(props){ 
-      this.props.imageUri = props.imageUri;
-      alert("user "+ props.imageUri);
+    this.props.imageUri = props.imageUri; 
     this.setState({imageUri:props.imageUri});
   }
 
@@ -28,11 +25,11 @@ export default class User extends Component<{}> {
 
   render(){
       return(
-      <MainNavigator screenProps={{imageUri: this.props.imageUri}}>
-          <Text style={{color:'#000'}}>
-          This is User News Feeds Screen
-          </Text>
-      </MainNavigator>
+        <MainNavigator screenProps={{imageUri: this.state.imageUri}}>
+            <Text style={{color:'#000'}}>
+            This is User News Feeds Screen
+            </Text>
+        </MainNavigator>
       );
   }
 }
@@ -53,7 +50,6 @@ const MainNavigator = TabNavigator({
     tabBarOptions:{
         showIcon:true,
         showLabel:true
-
     },
   }
 );
@@ -106,7 +102,5 @@ const MainNavigator = TabNavigator({
 //     <Navigator />
 //     );
 // 	}
+
 // }
-
-
-
