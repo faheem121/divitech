@@ -6,17 +6,21 @@ import {
   TextInput,
   TouchableOpacity ,AsyncStorage,ActivityIndicator,Image
 } from 'react-native';
+
+import { Permissions, Notifications } from 'expo';
 import { KeyboardAvoidingView } from 'react-native';
 
 import {Actions} from 'react-native-router-flux';
-export default class Form extends Component<{}> {
+export default class SignupForm extends Component<{}> {
 constructor()
     {
         super();
         this.state = {
             email:'',
-            password: '', 
-            isLoading:false
+            password: '',
+            pushtoken:'',
+              isLoading:false,
+            user_id:''
         }
     }
    updateValue(text,field) 
@@ -34,22 +38,22 @@ constructor()
         }
     }
     componentDidMount(){
-             AsyncStorage.getItem('auth_data').then((value)=> {
-                    if(value !== null){
+            AsyncStorage.getItem('auth_data').then((value)=> {
+                   if(value !== null){
                        var value = JSON.parse(value)
            
                        if(value[0].group === 'Admin'){
                        Actions.home()
                        }else if (value[0].group === 'User'){
-                         
+                        
                           Actions.user() 
                        }else{
                            AsyncStorage.removeItem('auth_data')
                        }
                     }
-                    
                 })
     }
+    
       submit()
     {
         this.setState({
@@ -68,6 +72,7 @@ constructor()
         method: 'POST', // or 'PUT'
         body: JSON.stringify(collection), // data can be `string` or {object}!
         headers:{
+        Accept: 'application/json',
         'Content-Type': 'application/json'
                 }
         }).then(res => res.json())
@@ -76,11 +81,15 @@ constructor()
         .then(response => {
         if (response.error) {
           alert(response.error)
-            this.setState({
-                              isLoading:false
-                        })
+          this.setState({
+                      isLoading:false,
+                })
         } else {
-             if(response.user.group == 'User'){
+            this.setState({
+                user_id:response.user.id.toString()
+            })
+            
+                     if(response.user.group == 'Admin'){
                  const arrayData =[];
          const AuthData = {
              user_id : response.user.id.toString(),
@@ -93,45 +102,107 @@ constructor()
                 AsyncStorage.getItem('auth_data').then((value)=> {
                     if(value !== null){
                         this.setState({
-                            isLoading:false
+                              isLoading:false
                         })
-                        Actions.user();
+                        Actions.home();
                     }else{
                         AsyncStorage.setItem('auth_data', JSON.stringify(arrayData));
-                         this.setState({
-                            isLoading:false
-                        })
-                            Actions.user();
-                    }
+                        
+                        
+                            //here update token
+          this.setState({
+            isLoading:false
+        })
+                        //end update token
+                        //Actions.home();
+                        this.registerForPushNotifications();
+                       //alert(response.user.id.toString())
+                        }
+                    
                 })
             }
             catch(err) {
                 console.log(err)
                 }
-        
-            }else if(response.user.group == 'Admin'){
+
             
-              alert('You Are Not a User Please Signin from Admin Side!')
+            }else if(response.user.group == 'User'){
+            
+              alert('You Are Not a Admin Please Signin from User Side!')
                this.setState({
                               isLoading:false
                         })
-              Actions.signup()
+              Actions.login()
             }else{
                 alert('There is an User Role Problem Kindly contact to DiviTech Organization!')
             }
-          
-       
-            
      
-      
+           
             } 
       })
         .catch(error => console.error('Error:', error));
     }
+  async registerForPushNotifications(){
+    
+    
+    const { status } = await Permissions.getAsync(Permissions.NOTIFICATIONS);
+
+    if (status !== 'granted') {
+      const { status } = await Permissions.askAsync(Permissions.NOTIFICATIONS);
+      if (status !== 'granted') {
+        return;
+      }
+    }
+
+   let push_token = await Notifications.getExpoPushTokenAsync();
+  
+
+    this.setState({
+      pushtoken:push_token,
+    });
+                        
+                        
+                        
+                   
+     let data = {
+         push_code:this.state.pushtoken}
+// Fields in the post
+
+ const formD = JSON.stringify(data)
+
+    // Create the config object for the POST
+    // You typically have an OAuth2 token that you use for authentication
+    const config = {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+       'Content-Type': 'application/json'
+       
+      },
+      body: formD
+    };
+
+    fetch('http://divitech.codejunkie.pk/api/v1/users/update/'+this.state.user_id, config)
+      .then(responseData => {
+     
+       
+        this.setState({
+            isLoading:false
+        })
+      
+        Actions.home();
+      
+      })
+      .catch(err => {
+        console.log(err);
+      });
+              
+    
+}
     
 	render(){
 		return(
-        
+             
 			<KeyboardAvoidingView style={{flexGrow: 1,
     justifyContent:'center',
     alignItems: 'center'}} behavior="padding" enabled>
@@ -152,10 +223,8 @@ constructor()
               placeholderTextColor = "#fff"
               ref={(input) => this.password = input}
               />  
-            
            <TouchableOpacity onPress= {()=>this.submit()} style={styles.button}>
-           
-                       {this.state.isLoading
+            {this.state.isLoading
             ?
            
          
@@ -165,11 +234,10 @@ constructor()
                  Login  </Text>
           )}
                  
-           </TouchableOpacity> 
-              
+           </TouchableOpacity>     
   		</KeyboardAvoidingView>
-			
-	)}
+			)
+	}
 }
 
 const styles = StyleSheet.create({

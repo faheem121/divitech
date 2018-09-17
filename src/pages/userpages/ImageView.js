@@ -5,11 +5,13 @@ import { Button, Icon } from 'native-base';
 
 import {Actions } from 'react-native-router-flux';
  
-export default class ImageView extends React.Component {
+export default class UserImageView extends React.Component {
     constructor(props){
         super(); 
     } 
     imageSelected(){
+        console.log("in imageView: ")
+        console.log(this.props.imageUri);
         Actions.user({imageUri:this.props.imageUri});
     }
   render() {
@@ -38,7 +40,6 @@ export default class ImageView extends React.Component {
      setTimeout(()=>{
         Actions.refresh({
             formCam:'http://thednetworks.com/wp-content/uploads/2012/01/picture_not_available_400-300.png'
-            
         })
      }, 0);
 

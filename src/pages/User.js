@@ -5,17 +5,20 @@ import  NewsFeeds  from './usertabs/NewsFeeds';
 import  Complain  from './usertabs/Complain';
 import  Status from './usertabs/Status';
 
-export default class User extends Component<{}> {
+export default class User extends Component {
 
   constructor(props){
     super(); 
     this.state = {
-      imageUri:''
+      imageUri:'',
+      statusId: null,
     } 
   }
   
-  componentWillReceiveProps(props){ 
+  componentWillReceiveProps(props){  
     this.props.imageUri = props.imageUri; 
+    this.props.statusId = props.statusID;
+    this.setState({statusId: props.statusID});
     this.setState({imageUri:props.imageUri});
   }
 
@@ -34,15 +37,15 @@ export default class User extends Component<{}> {
   }
 }
 const MainNavigator = TabNavigator({
+  Complain:{
+    screen:Complain
+  },
   NewsFeeds:{
     screen:NewsFeeds
   },
-  Complain:{
-      screen:Complain
-  },
   Status:{
       screen:Status
-  }
+  },
   },{
     animationEnabled:true,
     swipeEnabled:true,
@@ -53,54 +56,3 @@ const MainNavigator = TabNavigator({
     },
   }
 );
-
-
-
-//faheem bhai's
-
-// import React, { Component } from 'react';
-// import {
-//   StyleSheet,
-//   Text,
-//   View,
-//   StatusBar 
-// } from 'react-native';
- 
-// import {StackNavigator} from 'react-navigation';
-// import AddComplain from './UserAddComplain';
-
-// const Navigator = StackNavigator({
-//    AddComplain:{
-//         screen:AddComplain,
-
-//             }
-    
-// });
-// export default class User extends Component<{}> {
-
-//   constructor(props){
-//     super(); 
-//     this.state = {
-//       imageUri:''
-//     }
-    
-    
-//   }
-//   componentWillReceiveProps(props){
-//     let imageUri = props.imageUri;
-//       this.props.navigation.navigate(
-//         'AddComplain',
-//         { imageUri}
-//       )
-//     this.props.imageUri = props.imageUri;
-//     this.setState({imageUri:props.imageUri});
-
-//   }
-
-// 	render() {
-//     return(
-//     <Navigator />
-//     );
-// 	}
-
-// }

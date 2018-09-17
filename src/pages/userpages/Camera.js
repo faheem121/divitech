@@ -5,7 +5,8 @@ import {
     Text,
     StyleSheet,
     TouchableOpacity,
-    Vibration
+    Vibration,
+    ActivityIndicator
 } from 'react-native';
 
 import { Ionicons, Entypo } from '@expo/vector-icons';
@@ -14,17 +15,25 @@ import {Camera,  Permissions, ImagePicker  } from 'expo';
 import { Actions } from 'react-native-router-flux'; 
 
 class CameraView extends Component {
- 
+
     constructor(props){
         super(props);
         this.state = {
             hasCameraPermission : null, 
+            loading: true,
             camera:Camera,
             camType:Camera.Constants.Type.back,
             formCam:'http://thednetworks.com/wp-content/uploads/2012/01/picture_not_available_400-300.png'
         }
     }
-    async componentWillMount(){
+
+    async componentWillMount() { 
+        await Expo.Font.loadAsync({
+            'Roboto': require("../../../fonts/Roboto.ttf"),
+            'Roboto_medium': require("../../../fonts/Roboto-Medium.ttf"),
+        }); 
+        this.setState({loading:false});  
+         
        const {status} = await Permissions.askAsync(Permissions.CAMERA);
        this.setState({hasCameraPermission : status == 'granted'})
    }
@@ -60,31 +69,34 @@ class CameraView extends Component {
         });
     }
 
-    pickImage =  () => {
+    pickImage = () => {
         Actions.gallery();
     }
 
     render(){
+        if (this.state.loading) {
+            return (   
+                <View style={{flex:1,justifyContent:'center',alignItems:'center'}}>
+                    <ActivityIndicator size="large" color="#330066" animating />
+                </View>
+            );
+        }
         const {hasCameraPermission } = this.state;
         if(hasCameraPermission === null){
             return <View />
         }else if(hasCameraPermission == false ){
             return <Text> No Access  to Camera </Text>
         }else{
-            return  (
-                <Container>
+            return (
+                <Container style={{marginTop:23}} >
                 <Header>
                   <Left>
                     <Button transparent onPress = {() => Actions.pop()}>
                       <Icon name='arrow-back' />
-                    <Title>Back</Title>
+                    <Title style={{paddingLeft:15}}>Back</Title>
                     </Button>
                   </Left> 
-                  <Right>
-                      <Button info style={{height:30}} onPress={this.pickImage}>
-                        <Icon name="images" style={{color:'white', top:10, height:50}} />
-                      </Button>
-                  </Right> 
+                  <Right></Right>
                 </Header>
                 <View style={{flex:1}} >
                     <Camera
@@ -99,9 +111,9 @@ class CameraView extends Component {
                                 <Entypo onPress={()=>this.takePicture()} name="circle" size={50} color={'white'} />
                             </View>
                             <View style={{ justifyContent:'center', alignItems:'center'}}>
-                                <TouchableOpacity onPress={()=>this.viewPhoto()} >
-                                <Thumbnail source ={{uri: this.state.formCam}} small />
-                                </TouchableOpacity>
+                                <Button info style={{height:30, paddingTop:5}} onPress={this.pickImage}>
+                                    <Icon name="images" style={{color:'white', top:13, height:50}} />
+                                </Button>
                             </View>
                         </View>                   
                     </Camera>

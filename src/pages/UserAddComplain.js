@@ -1,28 +1,43 @@
 import React, { Component } from 'react';
-import { Text } from 'native-base';
+import {Container, Text ,Content,Icon} from 'native-base';
 import { TabNavigator } from 'react-navigation';
+import { TouchableOpacity,Platform ,AsyncStorage} from 'react-native';
 import  NewsFeeds  from './usertabs/NewsFeeds';
 import  Complain  from './usertabs/Complain';
 import  Status from './usertabs/Status';
+import {Actions} from 'react-native-router-flux';
 
 export default class AddComplain extends Component {
-    constructor(props){
+    constructor()
+    {
         super();
-        this.state = {
-            imageUri:''
-        }
-        
-        
+           
+    }
+  
+       static navigationOptions = ({ navigation }) => ({
+         
+            headerRight:
+            <TouchableOpacity onPress={() => _out._logout() }>
+            <Icon
+            name = {Platform.OS === 'ios' ? 'ios-power' : 'md-power'}
+            style={{paddingRight:10,color:'red'}}
+            />
+                </TouchableOpacity>,
+ title:"User Panel"
+}) 
+
+    componentDidMount() {
+   
+       _out = this;
+    
+   }
+    _logout() {
+             AsyncStorage.removeItem('auth_data');
+        Actions.login() 
+       
     }
 
-    componentWillReceiveProps(props){
-        this.setState({imageUri:props.imageUri});
     
-      }
-    
-        static navigationOptions = {
-      title:"Client Panel"
-    }
     render(){
         return(
         <MainNavigator>
@@ -32,7 +47,7 @@ export default class AddComplain extends Component {
         </MainNavigator>
         );
     }
-}
+} 
 const MainNavigator = TabNavigator({
    NewsFeeds:{
        screen:NewsFeeds

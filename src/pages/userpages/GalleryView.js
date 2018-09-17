@@ -16,40 +16,46 @@ export default class GalleryView extends React.Component {
     }
   
     async componentWillMount(){
+        
         const {status} = await Permissions.askAsync(Permissions.CAMERA_ROLL);
+        
         this.setState({hasCameraRollPermission : status == 'granted'})
     }
  
-    showGallery = async ()=>{
+    _showGallery = async () => {
         let result = await ImagePicker.launchImageLibraryAsync({
-            allowsEditing:true,
+            allowsEditing:false,
             aspect: [4,3]
         });
         
         if(!result.cancelled){
+            console.log("result not cancelled");
             this.setState({image: result.uri}) ; 
         } 
     }
 
-    imageSelected(){
-        Actions.user();
-    }
+
+
     render() {
-        return (  
-            <View style={{flex:1, alignItems:'center', alignContent:'center', alignSelf:'center', justifyContent:'center'}}>
-            <Text  onPress={this.showGallery} style={{padding:10, color:"white", fontSize:18, backgroundColor:"skyblue"}}>Select and Image</Text>
-                {/* <Button info block title="Pick image"  /> */}
-                {this.state.image ?(
-                    <View >
-                        <Image source={{ uri: this.state.image}} style={{marginTop:10, marginBottom:20, width:300, height:230}} />
-                        <Button style={{ height:50}} full info   onPress={this.imageSelected}>
-                            <Text style={{color:'white'}}> Continue</Text>
-                            <Icon name="md-checkbox" style={{color:"white"}} />
-                        </Button>
-                    </View>
-                ) :null}
-            </View> 
-        );
+    return (  
+        <View style={{flex:1, alignItems:'center', alignContent:'center', alignSelf:'center', justifyContent:'center'}}>
+        <Text  onPress={this._showGallery.bind(this)} style={{padding:10, color:"white", fontSize:18, backgroundColor:"skyblue"}}>Select and Image</Text>
+            {/* <Button info block title="Pick image"  /> */}
+            {this.state.image ?(
+                <View >
+                    <Image source={{ uri: this.state.image}} style={{marginTop:10, marginBottom:20, width:300, height:230}} />
+                    <Button style={{ height:50}} full info   onPress={ this._imageSelected.bind(this)}>
+                        <Text style={{color:'white'}}> Continue text</Text>
+                        <Icon name="md-checkbox" style={{color:"white"}} />
+                    </Button>
+                </View>
+
+            ) :null}
+        </View> 
+    );
+  }
+  _imageSelected = () =>{ 
+      Actions.user({imageUri:this.state.image});
   }
 }
   

@@ -8,7 +8,7 @@ import {
 } from 'react-native';
 
 import Logo from '../components/Logo';
-import Form from '../components/Form';
+import SignupForm from '../components/SignupForm';
 
 import {Actions} from 'react-native-router-flux';
 
@@ -26,7 +26,7 @@ export default class Signup extends Component<{}> {
     justifyContent :'center'}}>
 				<Logo/>
 			
-                    <Form place="Admin Email"/> 
+                    <SignupForm place="Admin Email"/> 
 				<View style={{flexGrow: 1,
     alignItems:'flex-end',
     justifyContent :'center',
